@@ -1,7 +1,10 @@
 -- Does the rating system's predicted win probability match what actually happens?
 --
 -- The system's own prediction is recoverable from rating changes: every rated match
--- moves exactly 40 points, so a winner gains 40 * (1 - p) and a loser loses 40 * p.
+-- moves 40 points, so a winner gains 40 * (1 - p) and a loser loses 40 * p.
+-- The 40 isn't documented; it's measured: the winner's gain always equals the loser's
+-- loss, evenly rated players trade exactly 20, and at any rating gap a favorite's
+-- gain-if-win plus loss-if-lose is 40.
 
 -- One row per rated match, seen from the favorite (higher pre-match rating).
 create view favorites as
