@@ -40,7 +40,7 @@ Seed assignment looks random: favorites are equally strong on every seed type, a
 ## Reproduce
 
 ```sh
-python3 fetch_data.py                 # download raw data to ~/mcsr-data (hours; resumable)
+python3 fetch_data.py                 # download raw data to ~/mcsr-data (~1 hour per season; resumable)
 pip install -r requirements.txt
 python3 analysis.py                   # build tables, print results, save figures/
 ```
