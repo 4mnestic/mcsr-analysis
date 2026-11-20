@@ -32,28 +32,3 @@ select
 from favorites
 where outcome <> 'no result'
 group by all;
-
--- Match quality: are close matches abandoned less? Shown overall and within skill
--- levels, because skill level drives both closeness and abandonment.
-create view match_quality as
-with labeled as (
-    select
-        season,
-        case
-            when match_elo < 1500 then '< 1500'
-            when match_elo < 1800 then '1500–1800'
-            else '1800+'
-        end as skill_level,
-        case when predicted < 0.6 then 'close' else 'lopsided' end as closeness,
-        outcome
-    from favorites
-)
-select
-    season,
-    coalesce(skill_level, 'all matches') as skill_level,
-    closeness,
-    count(*) as matches,
-    avg((outcome <> 'completed')::int) as abandonment_rate,
-    ci95(abandonment_rate, matches) as ci
-from labeled
-group by grouping sets ((season, skill_level, closeness), (season, closeness));

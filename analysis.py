@@ -36,22 +36,7 @@ ax.set(xlabel="Predicted favorite win rate", ylabel="Actual favorite win rate",
 ax.legend(frameon=False, loc="upper left")
 save(fig, "calibration")
 
-# 2. Abandonment: close vs. lopsided matches, overall and within skill levels.
-mq = con.sql(f"select * from match_quality where season = {seasons[0]}").df()
-levels = ["all matches", "< 1500", "1500–1800", "1800+"]
-fig, ax = plt.subplots(figsize=(6, 3.5))
-for offset, (closeness, color) in zip([-0.12, 0.12], [("close", BLUE), ("lopsided", ORANGE)]):
-    d = mq[mq.closeness == closeness].set_index("skill_level").reindex(levels)
-    ax.errorbar([i + offset for i in range(len(levels))], d.abandonment_rate, yerr=d.ci,
-                fmt="o", ms=6, capsize=0, color=color, label=f"{closeness} matches")
-ax.axvline(0.5, color=MUTED, lw=0.8)
-ax.set_xticks(range(len(levels)), [levels[0], *(f"Elo {lvl}" for lvl in levels[1:])])
-ax.set(ylabel="Abandoned (forfeit or no result)")
-ax.yaxis.set_major_formatter(lambda y, _: f"{y:.0%}")
-ax.legend(frameon=False)
-save(fig, "abandonment")
-
-# 3. Seed balance: median completion time by seed type.
+# 2. Seed balance: median completion time by seed type.
 sb = con.sql(f"""
     select s.* from seed_balance s
     join (select feature, seed_type, median_minutes as sort_key from seed_balance where season = {seasons[0]})
@@ -79,9 +64,7 @@ print(con.sql("""
     select season, round(sum(abs(actual - predicted) * matches) / sum(matches), 4) mean_abs_error,
            round(sum(matches) filter (where bin >= 0.75) / sum(matches), 3) share_predicted_75_plus
     from calibration group by 1 order by 1"""))
-print(con.sql("select season, round(avg((predicted < 0.6)::int), 3) share_close from favorites group by 1 order by 1"))
 print(con.sql("select * exclude (season), season from calibration order by season, bin"))
-print(con.sql("select * from match_quality order by season, skill_level, closeness"))
 print(con.sql("""
     select season, feature, seed_type, matches, round(avg_match_elo) avg_match_elo,
            round(avg_predicted, 3) avg_predicted, round(completion_rate, 3) completion_rate,
