@@ -66,7 +66,7 @@ for ax, feature in zip(axes, ["overworld", "bastion"]):
     ax.set_yticks(range(len(d)), [t.replace("_", " ").lower() for t in d.seed_type])
     ax.set_title(f"{feature.capitalize()} type", color=INK, loc="left")
     ax.set_xlabel("Median completion time (min)")
-axes[0].legend(frameon=False, loc="lower right")
+fig.legend(*axes[0].get_legend_handles_labels(), frameon=False, loc="upper right", ncol=2)
 save(fig, "seed_completion_time")
 
 # Numbers quoted in the reports.
