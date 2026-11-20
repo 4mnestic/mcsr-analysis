@@ -2,7 +2,9 @@
 """Download MCSR Ranked data for seasons 7 and 11 into ~/mcsr-data.
 
 Run:    python3 fetch_data.py      (no arguments; rerun any time to resume)
-Check:  ls ~/mcsr-data/season-11/matches | wc -l
+Check:  tmux attach -t fetch       (if started with the tmux command in the README)
+
+Order: match lists for both seasons (~1-2 h), then match details (season 7, then 11).
 
 Assumptions:
 - Public API, no key: 500 requests per 10 minutes, so it waits 1.2 s per request.
