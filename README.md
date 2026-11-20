@@ -18,7 +18,7 @@ Comparing those predictions with actual results, they differ by 0.4 percentage p
 
 ![Abandonment rate, close vs. lopsided matches](figures/abandonment.png)
 
-A match is *close* if the favorite's predicted win probability is under 60%, and *abandoned* if it ended in a forfeit or with no result. Skill level is the average of the two players' ratings. Overall, close and lopsided matches look the same (33% vs. 34% abandoned). Below 1800 Elo, lopsided matches are abandoned more: 44% vs. 52% below 1500, 28% vs. 34% at 1500–1800 (above 1800 there's no clear difference). The aggregate hides this because skill level drives abandonment far more than closeness: 44–52% below 1500, about 20% above 1800.
+A match is *close* if the favorite's predicted win probability is under 60% and *lopsided* otherwise, and *abandoned* if it ended in a forfeit or with no result. Skill level is the average of the two players' ratings. Overall, close and lopsided matches look the same (33% vs. 34% abandoned). Below 1800 Elo, lopsided matches are abandoned more: 44% vs. 52% below 1500, 28% vs. 34% at 1500–1800 (above 1800 there's no clear difference). The aggregate hides this because skill level drives abandonment far more than closeness: 44–52% below 1500, about 20% above 1800.
 
 **Implication:** tighter matchmaking for lower-rated players may reduce abandonment. This is observational, so it's a hypothesis for an experiment, not a result.
 
