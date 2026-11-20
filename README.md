@@ -8,7 +8,9 @@
 
 ![Predicted vs. actual favorite win rate](figures/calibration.png)
 
-The system's predicted win probability can be recovered from rating changes: every match moves 40 points, so a winner gains 40 × (1 − p). Across all matches, predicted and actual win rates differ by 0.4 percentage points on average. The only gap is above 75% predicted (2% of matches), where favorites win about 4 points less often than predicted.
+Like chess, MCSR Ranked uses Elo ratings. Before each match the system predicts each player's chance of winning from their rating gap, and sizes the rating change by it: beating the odds earns more points than winning as expected. The API doesn't publish these predictions, but the points reveal them. Each match moves 40 points, so a favorite given a 70% chance gains 12 points for a win (40 × 30%) and loses 28 for a loss (40 × 70%).
+
+Comparing those predictions with actual results, they differ by 0.4 percentage points on average. The only gap is above 75% predicted (2% of matches), where favorites win about 4 points less often than predicted.
 
 **Implication:** predictions are reliable enough to show players or to use in matchmaking as they are.
 
