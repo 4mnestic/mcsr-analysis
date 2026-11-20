@@ -2,7 +2,7 @@
 """Download MCSR Ranked data for seasons 7 and 11 into ~/mcsr-data.
 
 Run:    python3 fetch_data.py      (no arguments; rerun any time to resume)
-Check:  tmux attach -t fetch       (if started with the tmux command in the README)
+Check:  python3 fetch_data.py --status
 
 Order: match lists for both seasons (~1-2 h), then match details (season 7, then 11).
 
@@ -19,6 +19,7 @@ Output: ~/mcsr-data/season-N/leaderboard.json
 """
 import json
 import os
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -64,6 +65,19 @@ def match_list(uuid, season):
     return matches
 
 
+def match_ids(folder):
+    """Every match id in a season's saved match lists."""
+    return sorted({m["id"] for f in (folder / "match-lists").glob("*.json") for m in json.loads(f.read_text())})
+
+
+if sys.argv[1:] == ["--status"]:
+    for season in SEASONS:
+        folder = OUT / f"season-{season}"
+        lists = len(list((folder / "match-lists").glob("*.json")))
+        matches = len(list((folder / "matches").glob("*.json")))
+        print(f"season {season}: match lists {lists}/150, matches {matches}/{len(match_ids(folder))} (so far)")
+    sys.exit()
+
 for season in SEASONS:
     folder = OUT / f"season-{season}"
     if not (folder / "leaderboard.json").exists():
@@ -77,7 +91,7 @@ for season in SEASONS:
 
 for season in SEASONS:
     folder = OUT / f"season-{season}"
-    ids = sorted({m["id"] for f in (folder / "match-lists").glob("*.json") for m in json.loads(f.read_text())})
+    ids = match_ids(folder)
     for i, match_id in enumerate(ids, 1):
         path = folder / "matches" / f"{match_id}.json"
         old = OLD_SEASON_7 / f"{match_id}.json"
