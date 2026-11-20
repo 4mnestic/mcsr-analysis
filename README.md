@@ -1,6 +1,8 @@
-# MCSR Ranked: an independent analysis
+# Is MCSR Ranked's matchmaking working?
 
-[MCSR Ranked](https://mcsrranked.com) is a 1v1 ladder for Minecraft speedrunning: two players race to beat the game on the same seed. Using the public API, this looks at 80,161 ranked matches from Season 11 (Apr – Aug 2026) involving the top 150 players, and checks each finding against Season 7 (68,645 matches, Dec 2024 – Apr 2025).
+**Mostly, yes.** The rating system predicts who will win accurately, and the seed a match is played on doesn't change who wins. The weak spot is lopsided matches: players abandon them more often than close ones.
+
+[MCSR Ranked](https://mcsrranked.com) is a 1v1 ladder for Minecraft speedrunning: two players race to beat the game on the same seed. This is an independent matchmaking and player-experience analysis of 80,161 ranked matches from Season 11 (Apr – Aug 2026) involving the top 150 players, with each finding checked against Season 7 (68,645 matches, Dec 2024 – Apr 2025).
 
 ## Findings
 
@@ -35,6 +37,7 @@ Seed assignment looks random: favorites are equally strong on every seed type, a
 ## Data and limitations
 
 - Every match involves at least one top-150 player, so results describe high-level play, not the whole ladder.
+- Players are included because they finished the season in the top 150, so the sample is selected on success. Players who struggled or quit early are underrepresented, except as opponents.
 - Only matches with a rated favorite are used for findings 1 and 2 (ties and unrated matches excluded).
 - Completion times only count matches that finished, and finish rates differ slightly by seed type.
 - Data from the [MCSR Ranked API](https://docs.mcsrranked.com).
@@ -48,3 +51,7 @@ python3 analysis.py                   # build tables, print results, save figure
 ```
 
 `sql/` holds the table build and each analysis; `test_build.py` checks the table build.
+
+## Background
+
+I built the original data pipeline in 2025, and Claude helped extend it.
