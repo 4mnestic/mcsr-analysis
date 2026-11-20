@@ -17,8 +17,8 @@ seasons = [s for (s,) in con.sql("select distinct season from matches order by s
 colors = dict(zip(seasons, [BLUE, ORANGE]))
 
 
-def save(fig, name):
-    fig.tight_layout()
+def save(fig, name, top=1.0):
+    fig.tight_layout(rect=(0, 0, 1, top))
     fig.savefig(f"figures/{name}.png", facecolor="white")
     plt.close(fig)
 
@@ -27,7 +27,8 @@ def save(fig, name):
 cal = con.sql("select * from calibration where matches >= 100 order by season, bin").df()
 fig, ax = plt.subplots(figsize=(5, 4.5))
 ax.plot([0.5, 0.9], [0.5, 0.9], color=MUTED, lw=1, ls="--")
-for season, d in cal.groupby("season"):
+for season in seasons:
+    d = cal[cal.season == season]
     ax.errorbar(d.predicted, d.actual, yerr=d.ci, fmt="o-", ms=5, lw=1.5, capsize=0,
                 color=colors[season], label=f"Season {season}")
 ax.set(xlabel="Predicted favorite win rate", ylabel="Actual favorite win rate",
@@ -66,8 +67,8 @@ for ax, feature in zip(axes, ["overworld", "bastion"]):
     ax.set_yticks(range(len(d)), [t.replace("_", " ").lower() for t in d.seed_type])
     ax.set_title(f"{feature.capitalize()} type", color=INK, loc="left")
     ax.set_xlabel("Median completion time (min)")
-fig.legend(*axes[0].get_legend_handles_labels(), frameon=False, loc="upper right", ncol=2)
-save(fig, "seed_completion_time")
+fig.legend(*axes[0].get_legend_handles_labels(), frameon=False, loc="upper center", ncol=2)
+save(fig, "seed_completion_time", top=0.9)
 
 # Numbers quoted in the reports.
 print(con.sql("""

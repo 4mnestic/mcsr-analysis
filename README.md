@@ -1,6 +1,6 @@
 # MCSR Ranked: an independent analysis
 
-[MCSR Ranked](https://mcsrranked.com) is a 1v1 ladder for Minecraft speedrunning: two players race to beat the game on the same seed. Using the public API, this looks at 56,454 ranked matches from Season 7 (Dec 2024 – Apr 2025) involving the top 150 players.
+[MCSR Ranked](https://mcsrranked.com) is a 1v1 ladder for Minecraft speedrunning: two players race to beat the game on the same seed. Using the public API, this looks at 80,161 ranked matches from Season 11 (Apr – Aug 2026) involving the top 150 players, and checks each finding against Season 7 (68,645 matches, Dec 2024 – Apr 2025).
 
 ## Findings
 
@@ -10,23 +10,25 @@
 
 Like chess, MCSR Ranked uses Elo ratings. Before each match the system predicts each player's chance of winning from their rating gap, and sizes the rating change by it: beating the odds earns more points than winning as expected. The API doesn't publish these predictions, but the points reveal them. Each match moves 40 points (measured from the data, not documented; see [`sql/elo_calibration.sql`](sql/elo_calibration.sql)), so a favorite given a 70% chance gains 12 points for a win (40 × 30%) and loses 28 for a loss (40 × 70%).
 
-Comparing those predictions with actual results, they differ by 0.4 percentage points on average. The only gap is above 75% predicted (2% of matches), where favorites win about 4 points less often than predicted.
+Comparing those predictions with actual results, they differ by 0.6 percentage points on average (0.4 in Season 7). The misses are at the high end: favorites given a 70–75% chance win 67% of the time.
 
 **Implication:** predictions are reliable enough to show players or to use in matchmaking as they are.
 
-### 2. Lopsided matches are abandoned more often, but only within a skill level
+### 2. Lopsided matches are abandoned more often
 
-![Abandonment rate, close vs. lopsided matches](figures/abandonment.png)
+![Abandonment rate, close vs. lopsided matches, Season 11](figures/abandonment.png)
 
-A match is *close* if the favorite's predicted win probability is under 60% and *lopsided* otherwise, and *abandoned* if it ended in a forfeit or with no result. Skill level is the average of the two players' ratings. Overall, close and lopsided matches look the same (33% vs. 34% abandoned). Below 1800 Elo, lopsided matches are abandoned more: 44% vs. 52% below 1500, 28% vs. 34% at 1500–1800 (above 1800 there's no clear difference). The aggregate hides this because skill level drives abandonment far more than closeness: 44–52% below 1500, about 20% above 1800.
+A match is *close* if the favorite's predicted win probability is under 60% and *lopsided* otherwise, and *abandoned* if it ended in a forfeit or with no result. Skill level is the average of the two players' ratings. Overall, 27% of lopsided matches are abandoned vs. 19% of close ones, and the gap holds at every skill level: 21% vs. 37% at 1500–1800, 15% vs. 20% above 1800, and 36% vs. 84% below 1500 (only 500 lopsided matches).
 
-**Implication:** tighter matchmaking for lower-rated players may reduce abandonment. This is observational, so it's a hypothesis for an experiment, not a result.
+Season 7 shows the same gap below 1800 (45% vs. 54% below 1500, 29% vs. 34% at 1500–1800), but not overall (35% vs. 36%): lower-rated matches were abandoned far more and were more often close, which hid it.
+
+**Implication:** tighter matchmaking may reduce abandonment. This is observational, so it's a hypothesis for an experiment, not a result.
 
 ### 3. The seed pool is balanced
 
 ![Median completion time by seed type](figures/seed_completion_time.png)
 
-Seed assignment looks random: favorites are equally strong on every seed type, and average player rating differs by under 20 points. So differences between seed types are effects of the seed. Seed type shifts median completion time by at most 0.7 minutes (ruined portal 10.7, village 11.4) and completion rate by at most 4 points (65–69%). On every seed type, favorites win as often as predicted (within 1 point), so no seed type swaps skill for luck.
+Seed assignment looks random: favorites are equally strong on every seed type, and average player rating differs by under 5 points (under 20 in Season 7). So differences between seed types are effects of the seed. Seed type shifts median completion time by under a minute (ruined portal 9.7, village 10.5) and completion rate by at most 4 points (76–80%). On every seed type, favorites win as often as predicted (within 1 point). Season 7 shows the same ordering and the same result.
 
 **Implication:** no seed type needs removing.
 
